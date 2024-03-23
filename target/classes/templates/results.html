@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 60px; /* Adjusted for the fixed navbar */
+        }
+        .form-container {
+            max-width: 600px; /* Adjust the maximum width of the form container */
+            margin: 0 auto; /* Center the form horizontally */
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Technician Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/technician">View Appointments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/adminLogin">Log Out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 form-container">
+    <h2>Enter Test Results</h2>
+    <form id="testResultForm">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="patientId">Patient ID:</label>
+                <input type="text" class="form-control" id="patientId" name="patientId">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="appointmentId">Appointment ID:</label>
+                <input type="text" class="form-control" id="appointmentId" name="appointmentId">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="testType">Test Type:</label>
+                <select class="form-control" id="testType" name="testType">
+                    <option value="Blood Test">Blood Test</option>
+                    <option value="Urine Test">Urine Test</option>
+                    <option value="X-Ray">X-Ray</option>
+                    <option value="MRI Scan">MRI Scan</option>
+                    <option value="CT Scan">CT Scan</option>
+                    <option value="Ultrasound">Ultrasound</option>
+                    <option value="Echocardiogram">Echocardiogram</option>
+                    <option value="Electrocardiogram (ECG)">Electrocardiogram (ECG)</option>
+                    <option value="Endoscopy">Endoscopy</option>
+                    <option value="Colonoscopy">Colonoscopy</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="testResults">Test Results:</label>
+            <textarea class="form-control" id="testResults" name="testResults"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="doctorName">Doctor Name:</label>
+            <input type="text" class="form-control" id="doctorName" name="doctorName">
+        </div>
+
+        <div class="form-group">
+            <label for="labTechnicianName">Lab Technician Name:</label>
+            <input type="text" class="form-control" id="labTechnicianName" name="labTechnicianName">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+</div>
+
+
+<script>
+    document.getElementById("testResultForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData(this); // Create FormData object to store form data
+        var xhr = new XMLHttpRequest(); // Create XMLHttpRequest object
+
+        xhr.open("POST", "/test-results"); // Specify the request method and URL
+        xhr.setRequestHeader("Content-Type", "application/json"); // Set the request header
+        xhr.responseType = "json"; // Specify the response type
+
+        // Define a function to handle the response
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // If request is successful, display a success message
+                alert("Test results submitted successfully!");
+                // You can redirect the user to another page or perform other actions here
+            } else {
+                // If request fails, display an error message
+                alert("Failed to submit test results. Please try again later.");
+            }
+        };
+
+        // Convert FormData to JSON format
+        var jsonData = {};
+        formData.forEach(function(value, key){
+            jsonData[key] = value;
+        });
+
+        // Send the request with JSON data
+        xhr.send(JSON.stringify(jsonData));
+    });
+</script>
+
+<script>
+    // Function to download PDF
+    function downloadPDF(testResultId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/{testResultId}/pdf" + testResultId + "/pdf", true);
+        xhr.responseType = "blob";
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var blob = xhr.response;
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'test_result_' + testResultId + '.pdf';
+                link.click();
+            }
+        };
+        xhr.send();
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding-top: 60px;
+    }
+    .navbar {
+      background-color: #007bff;
+    }
+    .card {
+      margin-bottom: 20px;
+    }
+    .card-title {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Admin Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/userlogout">Log Out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div id="alert-message" class="alert alert-danger d-none" role="alert">
+    User with this email already exists!
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-white">Add User</h5>
+          <form id="user-form">
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+              <label for="user-type">User Type:</label>
+              <select class="form-control" id="user-type" name="userType" required>
+                <option value="Admin">Admin</option>
+                <option value="Technician">Technician</option>
+                <!-- Add more options if needed -->
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add User</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-white">User Details</h5>
+          <div id="user-details">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>User Type</th>
+                <th>Action</th> <!-- New column for actions -->
+              </tr>
+              </thead>
+              <tbody id="user-table-body">
+              <!-- User details will be dynamically added here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-white">Appointment Details</h5>
+          <div id="appointment-details">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>Appointment ID</th>
+                <th>Test Name</th>
+                <th>Date</th>
+                <th>Patient ID</th>
+                <th>Status</th>
+              </tr>
+              </thead>
+              <tbody id="appointment-table-body">
+              <!-- Appointment details will be dynamically added here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-white">Inquiry Details</h5>
+          <div id="inquiry-details">
+            <table class="table">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+              </tr>
+              </thead>
+              <tbody id="inquiry-table-body">
+              <!-- Inquiry details will be dynamically added here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    // Load users when the page loads
+    loadUsers();
+    loadAppointments();
+    loadInquiries();
+
+    // Function to load users
+    function loadUsers() {
+      $.get("/getusers", function(data) {
+        console.log("User data fetched successfully:", data);
+        $("#user-table-body").empty();
+        data.forEach(function(User) {
+          var deleteButton = '<button type="button" class="btn btn-danger btn-sm delete-user" data-id="' + User.id + '">Delete</button>';
+          $("#user-table-body").append(
+                  "<tr>" +
+                  "<td>" + User.id + "</td>" +
+                  "<td>" + User.email + "</td>" +
+                  "<td>" + User.userType + "</td>" +
+                  "<td>" + deleteButton + "</td>" + // Add the delete button
+                  "</tr>"
+          );
+        });
+      }).fail(function(xhr, status, error) {
+        console.error("Error loading users:", error);
+      });
+    }
+
+    function loadInquiries() {
+      $.get("/inquiry", function(data) {
+        console.log("Inquiry data fetched successfully:", data);
+        $("#inquiry-table-body").empty();
+        data.forEach(function(inquiry) {
+          $("#inquiry-table-body").append(
+                  "<tr>" +
+                  "<td>" + inquiry.id + "</td>" +
+                  "<td>" + inquiry.name + "</td>" +
+                  "<td>" + inquiry.email + "</td>" +
+                  "<td>" + inquiry.message + "</td>" +
+                  "</tr>"
+          );
+        });
+      }).fail(function(xhr, status, error) {
+        console.error("Error loading users:", error);
+      });
+    }
+
+    function loadAppointments() {
+      $.get("/api/appointments", function(data) {
+        $("#appointment-table-body").empty();
+        data.forEach(function(appointment) {
+          $("#appointment-table-body").append(
+                  "<tr>" +
+                  "<td>" + appointment.appointmentId + "</td>" +
+                  "<td>" + appointment.testType + "</td>" +
+                  "<td>" + appointment.appointmentDate + "</td>" +
+                  "<td>" + appointment.patientId + "</td>" +
+                  "<td>" + appointment.status + "</td>" +
+                  "</tr>"
+          );
+        });
+      });
+    }
+
+    // Submit user form
+    $("#user-form").submit(function(event) {
+      event.preventDefault();
+      var formData = {
+        email: $("#email").val(),
+        password: $("#password").val(),
+        userType: $("#user-type").val()
+      };
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/add/users",
+        data: JSON.stringify(formData),
+        dataType: "json",
+        success: function(data) {
+          console.log("User added successfully");
+          loadUsers();
+          $("#alert-message").addClass("d-none"); // Hide alert message if it was previously shown
+        },
+        error: function(xhr, status, error) {
+          console.error("Error adding user: " + error);
+          $("#alert-message").removeClass("d-none"); // Show alert message if user already exists
+        }
+      });
+    });
+
+    // Delete user function
+    $(document).on("click", ".delete-user", function() {
+      var userId = $(this).data("id");
+      if (confirm("Are you sure you want to delete this user?")) {
+        $.ajax({
+          type: "DELETE",
+          url: "/delete/user/" + userId,
+          success: function(response, status, xhr) {
+            console.log("User deleted successfully");
+            console.log("Response:", response);
+            console.log("Status:", status);
+            loadUsers(); // Reload the user list after deletion
+          },
+          error: function(xhr, status, error) {
+            console.error("Error deleting user:", error);
+            console.log("Status:", status);
+          }
+        });
+      }
+    });
+
+  });
+</script>
+</body>
+</html>
