@@ -4,7 +4,7 @@ import com.example.registrationlogindemo.dto.*;
 
 import com.example.registrationlogindemo.entity.Patient;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.example.registrationlogindemo.repository.PatientRepository;
 import com.example.registrationlogindemo.service.PatientService;
 import jakarta.servlet.http.HttpSession;
@@ -27,13 +27,11 @@ public class AuthController {
 
     @Autowired
     private PatientRepository patientRepository;
-
     @Autowired
     private PatientService patientService;
 
     @Autowired
     private HttpSession httpSession;
-
     @GetMapping("/login")
     public String showLoginScreen(){
         return "login";
@@ -44,18 +42,17 @@ public class AuthController {
         return "register";
     }
 
+
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody PatientDto patientDto) {
         try {
-            // Hash the password before registering
-            patientDto.hashPassword();
             patientService.registerPatient(patientDto);
             return ResponseEntity.ok().body("{\"message\": \"Registration successful\"}");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Registration failed\"}");
         }
     }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody loginDto loginDto) {
         try {
@@ -80,12 +77,14 @@ public class AuthController {
         httpSession.invalidate();
         return "login";
     }
+
+
+
+
+
+
+
+
+
+
 }
-
-
-
-
-
-
-
-

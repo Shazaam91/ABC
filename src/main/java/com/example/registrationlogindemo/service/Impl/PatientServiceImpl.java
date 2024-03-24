@@ -7,7 +7,6 @@ import com.example.registrationlogindemo.service.PatientService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,32 +40,23 @@ public class PatientServiceImpl implements PatientService {
                     "contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
         }
 
-        // Save the patient with hashed password
+        // Save the patient
         Patient patient = new Patient();
         patient.setEmail(patientDto.getEmail());
+        patient.setPassword(patientDto.getPassword());
         patient.setFirstName(patientDto.getFirstName());
         patient.setLastName(patientDto.getLastName());
         patient.setMobile(patientDto.getMobile());
-        // Hash the password
-        String hashedPassword = hashPassword(patientDto.getPassword());
-        patient.setPassword(hashedPassword);
 
         patientRepository.save(patient);
     }
 
     @Override
     public Patient login(String email, String password) {
-        Patient patient = patientRepository.findByEmail(email);
-        if (patient != null) {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            if (passwordEncoder.matches(password, patient.getHashedPassword())) {
-                return patient; // Authentication successful
-            }
-        }
-        return null; // Authentication failed
+        return patientRepository.findByEmailAndPassword(email, password);
     }
 
-    // Method to validate password complexity
+    // Method to validate password
     private boolean isValidPassword(String password) {
         // Password must be at least 8 characters long
         if (password.length() < 8) {
@@ -76,11 +66,5 @@ public class PatientServiceImpl implements PatientService {
         // Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character
         String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$";
         return password.matches(regex);
-    }
-
-    // Method to hash the password
-    public String hashPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(password);
     }
 }

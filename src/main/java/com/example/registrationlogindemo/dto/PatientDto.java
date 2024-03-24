@@ -1,7 +1,5 @@
 package com.example.registrationlogindemo.dto;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 public class PatientDto {
 
     private String firstName;
@@ -61,11 +59,5 @@ public class PatientDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    // Method to hash the password
-    public void hashPassword() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.password = passwordEncoder.encode(this.password);
     }
 }
