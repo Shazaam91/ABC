@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.math.BigInteger;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Data
@@ -30,9 +30,22 @@ public class Patient {
     @Column(name = "Mobile")
     private String mobile;
 
+    // Store hashed password
     @Column(name = "Password")
-    private String password;
+    private String hashedPassword;
 
+    // Constructor with hashed password
+    public Patient(String firstName, String lastName, String email, String mobile, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.mobile = mobile;
+        setPassword(password); // Hash the password
+    }
 
+    // Setter for password, automatically hashes the password
+    public void setPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.hashedPassword = passwordEncoder.encode(password);
+    }
 }
-

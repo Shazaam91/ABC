@@ -7,4 +7,6 @@ public interface PatientService {
     void registerPatient(PatientDto patientDto);
 
     Patient login(String email, String password);
+
+    String hashPassword(String password);
 }
