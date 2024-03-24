@@ -34,12 +34,17 @@
       margin-bottom: 30px;
       /* Add some space below the heading */
     }
+
+    /* Justify text in paragraphs */
+    #about p {
+      text-align: justify;
+    }
   </style>
 </head>
 
 <body>
 
-<header class="p-3 bg-white text-dark">
+<header class="p-3 bg-primary text-dark">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
       <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
@@ -47,13 +52,13 @@
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="#about" class="nav-link px-2 text-secondary">About Us</a></li>
-        <li><a href="#contact" class="nav-link px-2 text-white">Contact Us</a></li>
+        <li><a href="#about" class="nav-link px-2 text-dark">About Us</a></li>
+        <li><a href="#contact" class="nav-link px-2 text-dark">Contact Us</a></li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle px-2 text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle px-2 text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Login
           </a>
-          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+          <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="/adminLogin">Administrator</a></li>
             <li><a class="dropdown-item" href="/login">Patient</a></li>
           </ul>
@@ -73,8 +78,8 @@
     <div class="col-md-6">
       <section id="about" class="h-100 p-5 bg-light rounded-3">
         <h2>About Us</h2>
-        <p>ABC Laboratories is a leading provider of scientific research and analysis services. With state-of-the-art facilities and a team of expert researchers, we strive to deliver accurate and reliable results to our clients across various industries.</p>
-        <p>Our mission is to advance scientific knowledge and contribute to the betterment of society through our research and analysis services. We are committed to excellence, integrity, and innovation in everything we do.</p>
+        <p class="text-justify">ABC Laboratories is a leading provider of scientific research and analysis services. With state-of-the-art facilities and a team of expert researchers, we strive to deliver accurate and reliable results to our clients across various industries.</p>
+        <p class="text-justify">Our mission is to advance scientific knowledge and contribute to the betterment of society through our research and analysis services. We are committed to excellence, integrity, and innovation in everything we do.</p>
       </section>
     </div>
 
@@ -82,16 +87,16 @@
       <section id="contact" class="h-100 p-5 bg-light rounded-3">
         <h2>Contact Us</h2>
         <form id="contactForm">
-          <div class="form-group">
-            <label for="name">Name</label>
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" id="name" placeholder="Enter your name">
           </div>
-          <div class="form-group">
-            <label for="email">Email</label>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" placeholder="Enter your email">
           </div>
-          <div class="form-group">
-            <label for="message">Message</label>
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
             <textarea class="form-control" id="message" rows="5" placeholder="Enter your message"></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
@@ -100,6 +105,7 @@
     </div>
   </div>
 </main>
+
 
 <footer class="footer mt-auto py-3 bg-light">
   <div class="container text-center">
